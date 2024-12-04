@@ -43,8 +43,6 @@ class _SetupPageState extends State<SetupPage> {
     if (Calculator.telescope != null) {
       for (var i in telescopeOptions) {
         if (i.value == Calculator.telescope) {
-          // print('Found ${i.value}');
-          // print(i.runtimeType);
           setState(() {
             initialTelescope = i.value;
           });
@@ -96,34 +94,20 @@ class _SetupPageState extends State<SetupPage> {
     if (telescope is Telescope) {
       Calculator.telescope = telescope;
     }
-    // print(Calculator.telescope);
-    // print(Calculator.calculateDistance());
   }
   void _setMount(dynamic mount) {
     if (mount is Mount) {
       Calculator.mount = mount;
     }
-
-    // print(Calculator.mount);
   }
   void _setCounterweightSetup(dynamic counterweightSetup) {
     if (counterweightSetup is Counterweight || counterweightSetup is CounterweightSetup) {
       Calculator.counterweight = counterweightSetup;
     }
-    // print(Calculator.counterweight);
   }
 
   @override
   Widget build(BuildContext context) {
-    
-
-    // List<Currency> currencies = [
-    //   Currency(code: 'USD'),
-    //   Currency(code: 'EUR'),
-    //   Currency(code: 'AED'),
-    //   Currency(code: 'BTC'),
-    //   Currency(code: 'SOL'),
-    // ];
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -142,23 +126,9 @@ class _SetupPageState extends State<SetupPage> {
                       const SizedBox(height: 80),
                       const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                         Text("Counterweight Setup", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                        // const SizedBox(width: 32),
-                        // ElevatedButton(onPressed: (){}, child: const Text("+")) //Will open a page to input custom counterweight information
                       ]),
                       const SizedBox(height: 32),
                       DropdownMenu(initialSelection: initialCounterweight, dropdownMenuEntries: counterweightOptions, onSelected: _setCounterweightSetup,),
-                      //TODO: Consider adding a button to initiate the calculations here
-
-                    //   DropdownMenu(
-                    //   initialSelection: currencies[0],
-                    //   dropdownMenuEntries: [
-                    //     for (var currency in currencies)
-                    //       DropdownMenuEntry(
-                    //         label: currency.code,
-                    //         value: currency
-                    //       )
-                    //   ]
-                    // )
                     ],
                   ),
                 )
@@ -170,11 +140,3 @@ class _SetupPageState extends State<SetupPage> {
     );
   }
 }
-
-// class Currency {
-//       final String code;
-
-//       Currency({
-//         required this.code
-//       });
-//     }

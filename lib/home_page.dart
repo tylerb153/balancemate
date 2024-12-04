@@ -53,15 +53,6 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 32),
                 Center(child: Image.asset("assets/Amazing and extremely cool telescope icon that's certainly not just dev art ;D.png")),
               ]),
-                
-                // const Padding(padding: EdgeInsets.fromLTRB(0, 0, 32, 0), child: 
-                //   Align(alignment: Alignment.centerRight, child:
-                //     CircleAvatar(backgroundColor: Colors.red, child: Icon(Icons.search, color: Colors.white))
-                //   )
-                // )
-                // Align(alignment: Alignment.bottomCenter, child:
-                //   Container(height: 2, color: Colors.black)
-                // )
             )
         )
     );

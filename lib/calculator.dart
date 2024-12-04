@@ -31,21 +31,7 @@ class Calculator {
     else {
       RA2TelescopeCenter = radius / 1000;
     }
-    // print("radius: $radius");
-    // print("weight: $weight");
-    // print("distance: $distance");
-    // print("counterweightWeight: $counterweightWeight");
-    // print("RA2TelescopeCenter: $RA2TelescopeCenter");
-    // print(counterweightSetup.toString());
     double momentLoad = (weight * 9.81) * RA2TelescopeCenter;
     return (momentLoad / (counterweightWeight * 9.81) * 1000);
   }
 }
-
-
-
-// Telescope with 16.32kg and 271
-// Mount with 100mm distance
-// 21lb iOptron
-// result 403mm 
-//INSERT OR IGNORE INTO mounts VALUES(100, "test me", "Jacob", 100.0})

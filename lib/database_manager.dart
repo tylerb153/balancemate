@@ -173,7 +173,7 @@ class DatabaseManager {
   late Database db;
   init() async {
     var databasesPath = await getDatabasesPath();
-    // print(databasesPath);
+    // print(databasesPath); // left in here so I can find the database and delete it or view it
     String path = join(databasesPath, "database.db");
     db = await openDatabase(path, version: 1, onCreate: 
       (Database db, int version) async {
@@ -192,29 +192,11 @@ class DatabaseManager {
       });
 
     String jsonString = await rootBundle.loadString('assets/telescopes.json');
-    // '''
-    //   {
-    //     "telescopes": [
-    //       {
-    //         "Name": "Edge HD 8\\"",
-    //         "Manufacturer": "Celestron",
-    //         "Weight": 6.35,
-    //         "Diameter": 238
-    //       }
-    //     ]
-    //   }
-    // ''';
-    // I used this to test the decoding
-
     Map<String, dynamic> decodedJson = jsonDecode(jsonString);
 
     var telescopesJson = decodedJson["telescopes"];
 
     for (var telescope in telescopesJson) {
-      // print(double.parse(telescope["Diameter"].toString()));
-      // return Telescope(-1, json['Name'], json['Manufacturer'], json['Weight'], 0.0 + json['Diameter']);
-      // print(telescope.toString());
-
       await db.execute('INSERT OR IGNORE INTO telescopes VALUES(?, ?, ?, ?, ?)', [telescope["ID"], telescope["Name"], telescope["Manufacturer"], telescope["Weight"] + 0.0, telescope["Diameter"] + 0.0]);
     }
     
@@ -222,7 +204,6 @@ class DatabaseManager {
     decodedJson = jsonDecode(jsonString);
     var mountsJson = decodedJson["mounts"];
     for (var mount in mountsJson) {
-      // print(mount["Distance"].runtimeType);
       if (mount["Distance"] == null) {
         db.execute('INSERT OR IGNORE INTO mounts (id, name, manufacturer) VALUES(${mount["ID"]}, "${mount["Name"]}", "${mount["Manufacturer"]}")');
       }
@@ -248,12 +229,9 @@ class DatabaseManager {
   Future<List<Telescope>> getTelescopes() async {
     List<Telescope> telescopes = [];
     var dbTelescopes = await db.rawQuery('SELECT * FROM telescopes');
-    // print(dbTelescopes);
     for (var telescope in dbTelescopes) {
-      // print(telescope);
       telescopes.add(Telescope.fromSQL(telescope));
     }
-    // print(telescopes[0].toString());
     return telescopes;
   }
 
