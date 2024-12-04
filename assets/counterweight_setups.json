@@ -1,14 +1,17 @@
 {
     "counterweight_setups": [
       {
+        "ID": 0,
         "Name": "iOptron 20lbs",
         "Counterweights": "0, 0"
       },
       {
+        "ID": 1,
         "Name": "iOptron 15.5lbs",
         "Counterweights": "0, 1"
       },
       {
+        "ID": 2,
         "Name": "iOptron 30lbs",
         "Counterweights": "0, 2"
       }

@@ -4,10 +4,11 @@ import 'package:balancemate/setup_page.dart';
 import 'package:balancemate/details_page.dart';
 import 'package:balancemate/database_manager.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var db = DatabaseManager();
-  db.init();
+  await db.init();
+  await db.getTelescopes();
   runApp(const BalanceMateApp());
 }
 

@@ -12,6 +12,10 @@ class Telescope {
 
   Telescope(this._id, this._name, this._manufacturer, this._weight, this._diameter);
 
+  static Telescope fromSQL(Map<String, dynamic> telescope) {
+    return Telescope(telescope['id'], telescope['name'], telescope['manufacturer'], telescope['weight'], telescope['diameter']);
+  }
+
   @override
   String toString() {
     return "$_manufacturer - $_name";
@@ -103,23 +107,24 @@ class CounterweightSetup {
 
 class DatabaseManager {
   DatabaseManager();
-  dynamic db;
+  late Database db;
   init() async {
     var databasesPath = await getDatabasesPath();
+    print(databasesPath);
     String path = join(databasesPath, "database.db");
     db = await openDatabase(path, version: 1, onCreate: 
       (Database db, int version) async {
         await db.execute(
-          "CREATE TABLE telescopes(name TEXT, manufacturer TEXT, weight REAL, diameter REAL)"
+          "CREATE TABLE telescopes(id INTEGER PRIMARY KEY, name TEXT, manufacturer TEXT, weight REAL, diameter REAL)"
         );
         await db.execute(
-          "CREATE TABLE mounts(name TEXT, manufacturer TEXT, distance REAL DEFAULT NULL)"
+          "CREATE TABLE mounts(id INTEGER PRIMARY KEY, name TEXT, manufacturer TEXT, distance REAL DEFAULT NULL)"
         );
         await db.execute(
-          "CREATE TABLE counterweights(name TEXT, manufacturer TEXT, weight REAL, height REAL)"
+          "CREATE TABLE counterweights(id INTEGER PRIMARY KEY, name TEXT, manufacturer TEXT, weight REAL, height REAL)"
         );
         await db.execute(
-          "CREATE TABLE counterweightSetups(name TEXT, counterweights TEXT)"
+          "CREATE TABLE counterweightSetups(id INTEGER PRIMARY KEY, name TEXT, counterweights TEXT)"
         );
       });
 
@@ -147,7 +152,7 @@ class DatabaseManager {
       // return Telescope(-1, json['Name'], json['Manufacturer'], json['Weight'], 0.0 + json['Diameter']);
       // print(telescope.toString());
 
-      db.execute('INSERT OR IGNORE INTO telescopes VALUES(?, ?, ?, ?)', [telescope["Name"], telescope["Manufacturer"], telescope["Weight"] + 0.0, telescope["Diameter"] + 0.0]);
+      await db.execute('INSERT OR IGNORE INTO telescopes VALUES(?, ?, ?, ?, ?)', [telescope["ID"], telescope["Name"], telescope["Manufacturer"], telescope["Weight"] + 0.0, telescope["Diameter"] + 0.0]);
     }
     
     jsonString = await rootBundle.loadString('assets/mounts.json');
@@ -156,10 +161,10 @@ class DatabaseManager {
     for (var mount in mountsJson) {
       // print(mount["Distance"].runtimeType);
       if (mount["Distance"] == null) {
-        db.execute('INSERT OR IGNORE INTO mounts (name, manufacturer) VALUES("${mount["Name"]}", "${mount["Manufacturer"]}")');
+        db.execute('INSERT OR IGNORE INTO mounts (id, name, manufacturer) VALUES(${mount["ID"]}, "${mount["Name"]}", "${mount["Manufacturer"]}")');
       }
       else {
-        db.execute('INSERT OR IGNORE INTO mounts VALUES("${mount["Name"]}", "${mount["Manufacturer"]}", ${mount["Distance"] + 0.0})');
+        db.execute('INSERT OR IGNORE INTO mounts VALUES(${mount["ID"]}, "${mount["Name"]}", "${mount["Manufacturer"]}", ${mount["Distance"] + 0.0})');
       }
     }
 
@@ -167,21 +172,26 @@ class DatabaseManager {
     decodedJson = jsonDecode(jsonString);
     var counterweightsJson = decodedJson["counterweights"];
     for (var counterweight in counterweightsJson) {
-      db.execute('INSERT OR IGNORE INTO counterweights VALUES("${counterweight["Name"]}", "${counterweight["Manufacturer"]}", ${counterweight["Weight"] + 0.0}, ${counterweight["Height"] + 0.0})');
+      await db.execute('INSERT OR IGNORE INTO counterweights VALUES(${counterweight["ID"]}, "${counterweight["Name"]}", "${counterweight["Manufacturer"]}", ${counterweight["Weight"] + 0.0}, ${counterweight["Height"] + 0.0})');
     }
 
     jsonString = await rootBundle.loadString('assets/counterweight_setups.json');
     decodedJson = jsonDecode(jsonString);
     var counterweightSetupsJson = decodedJson["counterweight_setups"];
     for (var counterweightSetup in counterweightSetupsJson) {
-      db.execute('INSERT OR IGNORE INTO counterweightSetups VALUES("${counterweightSetup["Name"]}", "${counterweightSetup["Counterweights"]}")');
+      await db.execute('INSERT OR IGNORE INTO counterweightSetups VALUES(${counterweightSetup["ID"]}, "${counterweightSetup["Name"]}", "${counterweightSetup["Counterweights"]}")');
     }
   }
-
-  List<Telescope> getTelescopes() {
-    var dbTelescopes = db.execute('SELECT * FROM telescopes');
-    print(dbTelescopes);
-    return [];
+  Future<List<Telescope>> getTelescopes() async {
+    List<Telescope> telescopes = [];
+    var dbTelescopes = await db.rawQuery('SELECT * FROM telescopes');
+    // print(dbTelescopes);
+    for (var telescope in dbTelescopes) {
+      // print(telescope);
+      telescopes.add(Telescope.fromSQL(telescope));
+    }
+    // print(telescopes[0].toString());
+    return telescopes;
   }
 
   void addTelescope(Telescope telescope) {

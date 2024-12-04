@@ -1,72 +1,84 @@
 {
     "telescopes": [
       {
+        "ID": 0,
         "Name": "Edge HD 8\"",
         "Manufacturer": "Celestron",
         "Weight": 6.35,
         "Diameter": 238
       },
       {
-        "Name": "Edge HD 9.15\"",
+        "ID": 1,
+        "Name": "Edge HD 9.25\"",
         "Manufacturer": "Celestron",
         "Weight": 9.53,
         "Diameter": 271.78
       },
       {
+        "ID": 2,
         "Name": "Edge HD 11\"",
         "Manufacturer": "Celestron",
         "Weight": 13,
         "Diameter": 312.42
       },
       {
+        "ID": 3,
         "Name": "Edge HD 14\"",
         "Manufacturer": "Celestron",
         "Weight": 21,
         "Diameter": 400.5
       },
       {
+        "ID": 4,
         "Name": "Cat 51",
         "Manufacturer": "William Optics",
         "Weight": 2.38,
         "Diameter": 51
       },
       {
+        "ID": 5,
         "Name": "Cat 61",
         "Manufacturer": "William Optics",
         "Weight": 3.39,
         "Diameter": 61
       },
       {
+        "ID": 6,
         "Name": "Cat 71",
         "Manufacturer": "William Optics",
         "Weight": 4.29,
         "Diameter": 71
       },
       {
+        "ID": 7,
         "Name": "Cat 91",
         "Manufacturer": "William Optics",
         "Weight": 6.3,
         "Diameter": 91
       },
       {
+        "ID": 8,
         "Name": "Quattro 150P Imaging Newtonian 6\"",
         "Manufacturer": "Sky-Watcher ",
         "Weight": 5.72,
         "Diameter": 184.15
       },
       {
+        "ID": 9,
         "Name": "Quattro 150P Imaging Newtonian 8\"",
         "Manufacturer": "Sky-Watcher ",
         "Weight": 9.53,
         "Diameter": 238.12
       },
       {
+        "ID": 10,
         "Name": "Quattro 150P Imaging Newtonian 10\"",
         "Manufacturer": "Sky-Watcher ",
         "Weight": 16.56,
         "Diameter": 288.92
       },
       {
+        "ID": 11,
         "Name": "Quattro 150P Imaging Newtonian 12\"",
         "Manufacturer": "Sky-Watcher ",
         "Weight": 25.85,
