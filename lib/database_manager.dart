@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class Telescope {
-  final int _id;
+  final int? _id;
   final String _name;
   final String _manufacturer; 
   final double _weight; 
@@ -21,7 +21,7 @@ class Telescope {
     return "$_manufacturer - $_name";
   }
 
-  int getId() {
+  int? getId() {
     return _id;
   }
 
@@ -56,6 +56,10 @@ class Mount {
     return _id;
   }
 
+  static Mount fromSQL(Map<String, dynamic> mount) {
+    return Mount(mount['id'], mount['name'], mount['manufacturer'], mount['distance']);
+  }
+
 }
 
 class Counterweight {
@@ -66,6 +70,10 @@ class Counterweight {
   final double _height;
 
   Counterweight(this._id, this._name, this._manufacturer, this._weight, this._height);
+
+  static Counterweight fromSQL(Map<String, dynamic> counterweight) {
+    return Counterweight(counterweight['id'], counterweight['name'], counterweight['manufacturer'], counterweight['weight'], counterweight['height']);
+  }
 
   @override
   String toString() {
@@ -91,9 +99,13 @@ class CounterweightSetup {
 
   CounterweightSetup(this._id, this._name, this._counterweights);
 
+  static CounterweightSetup fromSQL(Map<String, dynamic> counterweightSetup, List<Counterweight> counterweights) {
+    return CounterweightSetup(counterweightSetup['id'], counterweightSetup['name'], counterweights);
+  }
+
   @override
   String toString() {
-    return _name;
+    return"$_name - ${_counterweights.toString()}";
   }
 
   List<Counterweight> getCounterweights() {
@@ -110,7 +122,7 @@ class DatabaseManager {
   late Database db;
   init() async {
     var databasesPath = await getDatabasesPath();
-    print(databasesPath);
+    // print(databasesPath);
     String path = join(databasesPath, "database.db");
     db = await openDatabase(path, version: 1, onCreate: 
       (Database db, int version) async {
@@ -124,7 +136,7 @@ class DatabaseManager {
           "CREATE TABLE counterweights(id INTEGER PRIMARY KEY, name TEXT, manufacturer TEXT, weight REAL, height REAL)"
         );
         await db.execute(
-          "CREATE TABLE counterweightSetups(id INTEGER PRIMARY KEY, name TEXT, counterweights TEXT)"
+          "CREATE TABLE counterweight_setups(id INTEGER PRIMARY KEY, name TEXT, counterweights TEXT)"
         );
       });
 
@@ -179,7 +191,7 @@ class DatabaseManager {
     decodedJson = jsonDecode(jsonString);
     var counterweightSetupsJson = decodedJson["counterweight_setups"];
     for (var counterweightSetup in counterweightSetupsJson) {
-      await db.execute('INSERT OR IGNORE INTO counterweightSetups VALUES(${counterweightSetup["ID"]}, "${counterweightSetup["Name"]}", "${counterweightSetup["Counterweights"]}")');
+      await db.execute('INSERT OR IGNORE INTO counterweight_setups VALUES(${counterweightSetup["ID"]}, "${counterweightSetup["Name"]}", "${counterweightSetup["Counterweights"]}")');
     }
   }
   Future<List<Telescope>> getTelescopes() async {
@@ -194,22 +206,68 @@ class DatabaseManager {
     return telescopes;
   }
 
-  void addTelescope(Telescope telescope) {
-    //TODO: Interface with the database
+  Future<Telescope?> addTelescope(String name, String manufacturer, double weight, double diameter) async {
+    await db.rawQuery('INSERT INTO telescopes (name, manufacturer, weight, diameter) VALUES(?, ?, ?, ?)', [name, manufacturer, weight, diameter]);
+    var result = await db.rawQuery('SELECT * FROM telescopes WHERE rowid = last_insert_rowid()');
+    if (result.isNotEmpty) {
+      return Telescope.fromSQL(result.first);
+    }
+    return null;
   }
 
-  List<Mount> getMounts() {
-    return [];
-    //TODO: Interface with the database
+  Future<List<Mount>> getMounts() async {
+    List<Mount> mounts = [];
+    var dbMounts = await db.rawQuery('SELECT * FROM mounts');
+    for (var mount in dbMounts) {
+      mounts.add(Mount.fromSQL(mount));
+    }
+    return mounts;
   }
 
-  List<Counterweight> getCounterweights() {
-    return [];
-    //TODO: Interface with the database
+  Future<List<Counterweight>> getCounterweights() async {
+    List<Counterweight> counterweights = [];
+    var dbCounterweights = await db.rawQuery('SELECT * FROM counterweights');
+    for (var counterweight in dbCounterweights) {
+      counterweights.add(Counterweight.fromSQL(counterweight));
+    }
+    return counterweights;
   }
 
-  List<CounterweightSetup> getCounterweightSetups() {
-    return [];
-    //TODO: Interface with the database
+  Future<Counterweight?> addCounterweight(String name, String manufacturer, double weight, double height) async {
+    await db.rawQuery('INSERT INTO counterweights (name, manufacturer, weight, height) VALUES(?, ?, ?, ?)', [name, manufacturer, weight, height]);
+    var result = await db.rawQuery('SELECT * FROM counterweights WHERE rowid = last_insert_rowid()');
+    if (result.isNotEmpty) {
+      return Counterweight.fromSQL(result.first);
+    }
+    return null;
+  }
+
+  Future<List<CounterweightSetup>> getCounterweightSetups() async {
+    List<CounterweightSetup> counterweightSetups = [];
+    List<Counterweight> counterweights = await getCounterweights();
+    var dbCounterweightSetups = await db.rawQuery('SELECT * FROM counterweight_setups');
+    for (var counterweightSetup in dbCounterweightSetups) {
+      List<Counterweight> counterweightsToAdd = [];
+      for (Counterweight counterweight in counterweights) {
+        if (counterweightSetup["counterweights"].toString().contains(counterweight.getId().toString())) {
+          counterweightsToAdd.add(counterweight);
+        }
+      }
+      counterweightSetups.add(CounterweightSetup.fromSQL(counterweightSetup, counterweightsToAdd));
+    }
+    return counterweightSetups;
+  }
+
+  Future<CounterweightSetup?> addCounterweightSetup(String name, List<Counterweight> counterweights) async {
+  String counterweightIDs = "";
+  for (var counterweight in counterweights) {
+    counterweightIDs += "${counterweight.getId()}, ";
+  }
+  await db.rawQuery('INSERT INTO counterweight_setups (name, counterweights) VALUES(?, ?)', [name, counterweightIDs]);
+  var result = await db.rawQuery('SELECT * FROM counterweight_setups WHERE rowid = last_insert_rowid()');
+  if (result.isNotEmpty) {
+    return CounterweightSetup.fromSQL(result.first, counterweights);
+  }
+  return null;
   }
 }

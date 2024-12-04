@@ -8,7 +8,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var db = DatabaseManager();
   await db.init();
-  await db.getTelescopes();
+  var counterweightSetups = await db.getCounterweightSetups();
+  for (var i in counterweightSetups) {
+    print(i.toString());
+  }
   runApp(const BalanceMateApp());
 }
 
