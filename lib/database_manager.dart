@@ -226,6 +226,11 @@ class DatabaseManager {
       await db.execute('INSERT OR IGNORE INTO counterweight_setups VALUES(${counterweightSetup["ID"]}, "${counterweightSetup["Name"]}", "${counterweightSetup["Counterweights"]}")');
     }
   }
+
+  Future<void> close() async {
+    await db.close();
+  }
+
   Future<List<Telescope>> getTelescopes() async {
     List<Telescope> telescopes = [];
     var dbTelescopes = await db.rawQuery('SELECT * FROM telescopes');
