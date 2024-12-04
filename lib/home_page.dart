@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:balancemate/calculator.dart';
+import 'package:balancemate/database_manager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -7,7 +9,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,14 +24,38 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold
                   ))
                 ),
-                const Align(alignment: Alignment.centerLeft, child: 
-                  Text('Telescope: placeholder telescope name\n'
-                  'Mount: placeholder mount name\n'
-                  'Accessories: placeholder accessories\n'
-                  'Counterweight: placeholder counterweight weight\n'
-                  'Counterweight Distance: placeholder distance')
+                const SizedBox(height: 32,),
+                Align(alignment: Alignment.centerLeft, child:
+                  Column(children: [
+                    Row(children: [
+                      const Text('Telescope: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Expanded(child: 
+                        Text(Calculator.telescope != null ? Calculator.telescope.toString() : "No Telescope Selected", softWrap: true, overflow: TextOverflow.ellipsis)
+                      )
+                    ]),
+                    const SizedBox(height: 8),
+                    Row(children: [
+                      const Text('Mount: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Expanded(child:
+                        Text(Calculator.mount != null ? Calculator.mount.toString() : "No Mount Selected", softWrap: true, overflow: TextOverflow.ellipsis)
+                      )
+                    ]),
+                    const SizedBox(height: 8),
+                    Row(children: [
+                      const Text('Counterweight: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Expanded(child: 
+                        Text(Calculator.counterweight != null ? Calculator.counterweight.toString() : "No Counterweight Selected", softWrap: true, overflow: TextOverflow.ellipsis)
+                      )
+                    ]),
+                    const SizedBox(height: 32),
+                    const Center(child: Text('Counterweight Distance: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+                    Text(Calculator.calculateDistance() != null ? "${Calculator.calculateDistance()!.round().toString()}mm" : "There is no valid setup!", softWrap: true, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 20))
+                  ])
                 ),
+                const SizedBox(height: 32),
                 Center(child: Image.asset("assets/Amazing and extremely cool telescope icon that's certainly not just dev art ;D.png")),
+              ]),
+                
                 // const Padding(padding: EdgeInsets.fromLTRB(0, 0, 32, 0), child: 
                 //   Align(alignment: Alignment.centerRight, child:
                 //     CircleAvatar(backgroundColor: Colors.red, child: Icon(Icons.search, color: Colors.white))
@@ -39,9 +64,8 @@ class _HomePageState extends State<HomePage> {
                 // Align(alignment: Alignment.bottomCenter, child:
                 //   Container(height: 2, color: Colors.black)
                 // )
-              ])
             )
-          )
+        )
     );
   }
 }

@@ -77,7 +77,7 @@ class Counterweight {
 
   @override
   String toString() {
-    return "$_manufacturer - $_name";
+    return "$_manufacturer - ${_weight}kg";
   }
 
   double getWeight() {
@@ -85,6 +85,9 @@ class Counterweight {
   }
   double getHeight() {
     return _height;
+  }
+  String getName() {
+    return _name;
   }
 
   int getId() {
@@ -105,7 +108,7 @@ class CounterweightSetup {
 
   @override
   String toString() {
-    return"$_name - ${_counterweights.toString()}";
+    return _name;
   }
 
   List<Counterweight> getCounterweights() {

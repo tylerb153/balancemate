@@ -114,3 +114,5 @@ class _SetupPageState extends State<SetupPage> {
     );
   }
 }
+
+//TODO: Make the selected ones still selected in setup page
