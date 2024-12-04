@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:balancemate/home_page.dart';
 import 'package:balancemate/setup_page.dart';
 import 'package:balancemate/details_page.dart';
+import 'package:balancemate/database_manager.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  var db = DatabaseManager();
+  db.init();
   runApp(const BalanceMateApp());
 }
 
@@ -12,6 +16,7 @@ class BalanceMateApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return const MaterialApp(
       home: NavigationPage(),
     );

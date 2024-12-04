@@ -1,0 +1,25 @@
+{
+    "counterweights": [
+      {
+        "ID": 0,
+        "Name": "10 lb. CW for iEQ30 & ZEQ Mounts",
+        "Manufacturer": "iOptron",
+        "Height": 55.5,
+        "Weight": 4.5
+      },
+      {
+        "ID": 1,
+        "Name": "5.5 lb. CW for iEQ45, CEM60 & CEM70 Mounts",
+        "Manufacturer": "iOptron",
+        "Height": 25,
+        "Weight": 2.5
+      },
+      {
+        "ID": 2,
+        "Name": "21 lb. CW for iEQ45, CEM60, and CEM70 Mounts",
+        "Manufacturer": "iOptron",
+        "Height": 75,
+        "Weight": 9.5
+      }
+    ]
+  }

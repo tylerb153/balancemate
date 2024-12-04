@@ -1,0 +1,19 @@
+{
+    "mounts": [
+      {
+        "Name": "AM5N Harmonic Drive",
+        "Manufacturer": "ZWO",
+        "Distance": null
+      },
+      {
+        "Name": "Rehm",
+        "Manufacturer": "Custom",
+        "Distance": 97.044
+      },
+      {
+        "Name": "Star Adventurer GTi Mount Kit",
+        "Manufacturer": "Sky-Watcher",
+        "Distance": null
+      }
+    ]
+  }

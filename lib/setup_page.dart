@@ -7,7 +7,6 @@ class SetupPage extends StatefulWidget {
 }
 
 class _SetupPageState extends State<SetupPage> {
-  int _selectedIndex = 0;
 
   //I list the options here so they can be modified for database connection
   List<DropdownMenuEntry> telescopeOptions = [
@@ -28,12 +27,6 @@ class _SetupPageState extends State<SetupPage> {
     const DropdownMenuEntry(value: "130", label: "30 lbs - 1"),
     const DropdownMenuEntry(value: "230", label: "30 lbs - 2")
   ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

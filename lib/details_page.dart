@@ -7,13 +7,6 @@ class DetailsPage extends StatefulWidget{
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  int _selectedIndex = 2;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
     @override
     Widget build(BuildContext context) {
     return const Scaffold(
