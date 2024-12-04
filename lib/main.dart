@@ -2,16 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:balancemate/home_page.dart';
 import 'package:balancemate/setup_page.dart';
 import 'package:balancemate/details_page.dart';
-import 'package:balancemate/database_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var db = DatabaseManager();
-  await db.init();
-  var counterweightSetups = await db.getCounterweightSetups();
-  for (var i in counterweightSetups) {
-    print(i.toString());
-  }
   runApp(const BalanceMateApp());
 }
 
